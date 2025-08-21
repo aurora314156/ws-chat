@@ -8,5 +8,12 @@
 
 第一次使用前，需要安裝環境：
 
-```bash
-./install_env.sh
+```
+bash ./install_env.sh
+```
+
+## 啟動環境
+
+```
+bash ./start_services.sh
+```
