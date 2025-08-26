@@ -1,8 +1,8 @@
 from db.mongo_init import check_mongo_connection
 from fastapi import FastAPI, WebSocket
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
-from chat.websocket import websocket_endpoint
+from chat.websocket import websocket_endpoint, show_message_history
 from pydantic import BaseModel
 
 
@@ -36,6 +36,11 @@ async def get():
 async def ws(websocket: WebSocket):
     await websocket_endpoint(websocket)
 
+
+@app.get("/messages/history")
+async def get_history():
+    return await show_message_history()
+   
 
 @app.on_event("startup")
 async def startup_event():

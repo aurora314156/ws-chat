@@ -6,7 +6,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      MONGO_URI: "mongodb://admin:admin@mongodb:27017/chat_db"
+      MONGO_URI: "mongodb://admin:admin@mongodb:27017/chat_db?authSource=admin"
     depends_on:
       - mongodb
 

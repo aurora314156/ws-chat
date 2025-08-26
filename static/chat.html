@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>簡單聊天室</title>
+    <title>Simple Chat</title>
     <style>
         body { font-family: Arial; }
         #chat { border: 1px solid #ccc; height: 300px; overflow-y: scroll; padding: 5px; }
@@ -9,40 +9,64 @@
     </style>
 </head>
 <body>
-    <h3>聊天室</h3>
-    暱稱: <input type="text" id="username" /> <br><br>
-    <div id="chat"></div>
-    <input type="text" id="message" placeholder="輸入訊息..." />
-    <button onclick="sendMessage()">送出</button>
+    <h3>Simple Chat</h3>
+    <div id="chat"></div> <br>
+    Username: <input type="text" id="username" />
+    <input type="text" id="message" placeholder="Input message..." />
+    <button onclick="sendMessage()">Send</button>
 
     <script>
         const chat = document.getElementById("chat");
-        const ws = new WebSocket("ws://localhost:8000/ws");
 
-         ws.onmessage = function(event) {
-            const data = JSON.parse(event.data);
+        // Convert UTC ISO string to local time format: "YYYY/MM/DD HH:MM:SS"
+        function formatLocalTime(utcString) {
+            if (!utcString) return "";
+            const date = new Date(utcString);
+
+            const pad = (n) => n.toString().padStart(2, "0");
+
+            return `${date.getFullYear()}/${pad(date.getMonth()+1)}/${pad(date.getDate())} `
+                 + `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+        }
+
+        function displayMessage(data) {
             const div = document.createElement("div");
-
-            // 將 timestamp 轉成簡單可讀字串
-            let timeStr = "";
-            if(data.timestamp) {
-                const date = new Date(data.timestamp);
-                timeStr = date.toLocaleTimeString(); // 顯示時:分:秒
-            }
-
-            div.textContent = `[${timeStr}] [${data.username}] ${data.message}`;
+            div.textContent = `[${formatLocalTime(data.timestamp)}] ${data.username}: ${data.message}`;
             chat.appendChild(div);
             chat.scrollTop = chat.scrollHeight;
+        }
+
+        // -----------------------------
+        // Load histroy messages
+        // -----------------------------
+        async function loadHistory() {
+            const res = await fetch("/messages/history");
+            const msgs = await res.json();
+
+            msgs.forEach(displayMessage);
+        }
+
+        // -----------------------------
+        // WebSocket realtime message
+        // -----------------------------
+        const ws = new WebSocket("ws://localhost:8000/ws");
+
+        ws.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            displayMessage(data);
         };
 
         async function sendMessage() {
             const username = document.getElementById("username").value || "Anonymous";
-            const message = document.getElementById("message").value;
-            if(message) {
-                ws.send(JSON.stringify({ username, message }));
-                document.getElementById("message").value = "";
-            }
+            const message = document.getElementById("message").value.trim();
+            if(!message) return;
+
+            ws.send(JSON.stringify({ username, message }));
+            document.getElementById("message").value = "";
         }
+
+        // Load chat history when the user first joins the chat
+        window.onload = loadHistory;
     </script>
 </body>
 </html>

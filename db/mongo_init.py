@@ -6,8 +6,7 @@ from logger import logger
 
 # Prefer reading MongoDB-related environment variables from the cloud environment.
 # If not available, fall back to reading from the local .env file.
-if not all([os.environ.get("MONGO_URI"), os.environ.get("DB_NAME"), os.environ.get("COLLECTION_NAME")]):
-    load_dotenv()  # load local .env file.
+load_dotenv()  # load local .env file.
 
 
 MONGO_URI = os.environ.get("MONGO_URI", "mongodb://admin:admin@mongodb:27017/chat_db?authSource=admin")
@@ -17,7 +16,7 @@ COLLECTION_NAME = os.environ.get("COLLECTION_NAME", "messages")
 # ----------------------------
 # MongoDB client
 # ----------------------------
-mongo_client = AsyncIOMotorClient(MONGO_URI)
+mongo_client = AsyncIOMotorClient(MONGO_URI, serverSelectionTimeoutMS=3000)
 db = mongo_client[DB_NAME]
 messages_collection = db[COLLECTION_NAME]
 
