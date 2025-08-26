@@ -1,41 +1,19 @@
 from fastapi import WebSocket, WebSocketDisconnect
-from motor.motor_asyncio import AsyncIOMotorClient
 from datetime import datetime
-import asyncio
-import logging
+from db.mongo_init import messages_collection
+from logger import logger
 
-# log setting
-logger = logging.getLogger("chat") 
-logger.setLevel(logging.INFO)
-formatter = logging.Formatter("[%(asctime)s] %(levelname)s: %(message)s")
 
-ch = logging.StreamHandler()
-ch.setFormatter(formatter)
-logger.addHandler(ch)
 
-# MongoDB 連線設定
-MONGO_USER = "admin"
-MONGO_PASS = "admin"
-MONGO_HOST = "localhost"
-MONGO_PORT = 27017
-DB_NAME = "chat_db"
-COLLECTION_NAME = "messages"
 
-# 建立 MongoDB client
-mongo_client = AsyncIOMotorClient(
-    f"mongodb://{MONGO_USER}:{MONGO_PASS}@{MONGO_HOST}:{MONGO_PORT}"
-)
-db = mongo_client[DB_NAME]
-messages_collection = db[COLLECTION_NAME]
-
-# 保存 WebSocket 連線
+# Save WebSocket connections
 connections = []
 
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     connections.append(websocket)
     try:
-        # 發送歷史訊息
+        # send history messages
         async for msg in messages_collection.find().sort("timestamp", 1):
             ts = msg.get("timestamp")
             await websocket.send_json({
@@ -44,7 +22,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 "timestamp": ts.isoformat() if isinstance(ts, datetime) else ""
             })
 
-        # 接收新訊息
+        # receive message
         while True:
             data = await websocket.receive_json()
             timestamp = datetime.utcnow().isoformat()
@@ -56,7 +34,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 "timestamp": timestamp
             })
 
-            # 傳給前端時轉成可序列化字串
+            # Convert to a serializable string before sending to the frontend
             data_to_send = {
                 "username": str(data.get("username", "Anonymous")),
                 "message": str(data.get("message", "")),

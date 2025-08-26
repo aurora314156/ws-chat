@@ -1,22 +1,40 @@
-# 簡單聊天室 Demo
-![示範圖片](assets/demo.png)
-
-# Description
-
-這是一個使用 **FastAPI + WebSocket + MongoDB** 的簡單聊天室範例。
-
-所有加入這個chat的人，都能即時看到其他人發送的訊息。
+# Simple Chat Demo
+![Demo](assets/demo.png)
 
 ---
 
-## 安裝環境
+## Description
 
-```
-bash ./install_env.sh
-```
+This is a simple real-time chat application deployed on **GCP**.  
+It is built with **FastAPI**, **WebSocket**, and **MongoDB**, and allows all participants in the chat to see messages instantly.  
 
-## 啟動環境
+### Deployment & Services
+- **Compute**: GCP Cloud Run  
+- **Database**: MongoDB Atlas (hosted on GCP)  
+- **Backend Framework**: FastAPI  
+- **Real-time Communication**: WebSocket
 
-```
-bash ./start_services.sh
-```
+---
+
+## Dev Related
+
+### Install and Build Env
+docker compose up --build -d
+
+### Dev Env Debugging
+docker compose logs -f app
+
+### Remove Env
+docker compose down -v
+
+---
+
+## Todo List 📝
+
+- [x] Local dev env
+- [x] GCP cloud run set up
+- [ ] Mongo Atlas(GCP) set up
+- [ ] Build project on GCP cloud run
+- [ ] AI feature research
+- [ ] Add some AI feature to project
+- [ ] Others (linter, CI/CD, etc.)
