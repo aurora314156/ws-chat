@@ -1,6 +1,6 @@
 from db.mongo_init import check_mongo_connection
 from fastapi import FastAPI, WebSocket
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from chat.websocket import websocket_endpoint, show_message_history
 from pydantic import BaseModel
@@ -23,7 +23,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/", response_model=StatusResponse)
 async def root():
-    return {"status": "ok", "message": "Chat server running 🚀"}
+    return RedirectResponse(url="/chat")
 
 
 @app.get("/chat")
