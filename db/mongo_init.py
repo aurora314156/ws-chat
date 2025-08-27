@@ -31,6 +31,7 @@ async def check_mongo_connection():
     try:
         # 使用 serverSelectionTimeoutMS 防止卡住
         await mongo_client.admin.command("ping")
+        logger.info(f"MONGO_URI: {MONGO_URI}, DB_NAME: {DB_NAME}, COLLECTION_NAME: {COLLECTION_NAME}")
         logger.info(f"[✅] MongoDB connection successful. Database '{DB_NAME}' is reachable.")
     except Exception as e:
         logger.error(f"[❌] MongoDB connection failed: {e}")

@@ -18,9 +18,6 @@ app = FastAPI(
 )
 
 
-# # 掛載 static 資料夾
-# app.mount("/static", StaticFiles(directory="static"), name="static")
-
 @app.get("/", response_model=StatusResponse)
 async def root():
     return RedirectResponse(url="/chat")
