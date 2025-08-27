@@ -18,7 +18,7 @@ COLLECTION_NAME = os.environ.get("COLLECTION_NAME", "messages")
 logger.info(f"MONGO_URI: {MONGO_URI}, DB_NAME: {DB_NAME}, COLLECTION_NAME: {COLLECTION_NAME}")
 
 if not MONGO_URI or not DB_NAME or not COLLECTION_NAME:
-    logger.error("❌ MONGO_ENV parameters is not set! Please check environment variables.")
+    logger.error("[❌] MONGO_ENV parameters is not set! Please check environment variables.")
 
 # ----------------------------
 # MongoDB client
@@ -42,11 +42,11 @@ async def check_mongo_connection():
 # ----------------------------
 # MongoDB init check at startup
 # ----------------------------
-async def init_db():
+async def init_mongodb():
     collections = await db.list_collection_names()
     if "messages" not in collections:
         await db.create_collection("messages")
-        logger.info("✅ messages collection created")
+        logger.info("[✅] messages collection created")
     else:
-        logger.info("ℹ️ messages collection already exists")
+        logger.info("[ℹ️]messages collection already exists")
 
