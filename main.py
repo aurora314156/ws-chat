@@ -33,11 +33,6 @@ async def ws(websocket: WebSocket):
     await websocket_endpoint(websocket)
 
 
-@app.get("/messages/history")
-async def get_history():
-    return await show_message_history()
-   
-
 @app.on_event("startup")
 async def startup_event():
     await check_mongo_connection()

@@ -37,16 +37,6 @@
         }
 
         // -----------------------------
-        // Load histroy messages
-        // -----------------------------
-        async function loadHistory() {
-            const res = await fetch(`${location.origin}/messages/history`);
-            const msgs = await res.json();
-
-            msgs.forEach(displayMessage);
-        }
-
-        // -----------------------------
         // WebSocket realtime message
         // -----------------------------
         const wsProtocol = location.protocol === "https:" ? "wss" : "ws";
@@ -66,8 +56,6 @@
             document.getElementById("message").value = "";
         }
 
-        // Load chat history when the user first joins the chat
-        window.onload = loadHistory;
     </script>
 </body>
 </html>
