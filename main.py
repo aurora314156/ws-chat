@@ -11,7 +11,7 @@ class StatusResponse(BaseModel):
 
 app = FastAPI(
     title="Chat Server API",
-    description="Simple chat application with FastAPI + WebSocket + MongoDB",
+    description="Live chat application with FastAPI + WebSocket + MongoDB",
     version="1.0.0",
     redoc_url="/redoc"
 )

@@ -1,4 +1,4 @@
-# Simple Chat Demo
+# Live Chat Demo
 ![Demo](assets/demo.png)
 
 ---
