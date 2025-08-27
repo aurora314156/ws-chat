@@ -22,8 +22,9 @@ if not MONGO_URI or not DB_NAME or not COLLECTION_NAME:
 
 # ----------------------------
 # MongoDB client
+# serverSelectionTimeoutMS 防止DB還沒啟動卡住
 # ----------------------------
-mongo_client = AsyncIOMotorClient(MONGO_URI, serverSelectionTimeoutMS=3000)
+mongo_client = AsyncIOMotorClient(MONGO_URI, serverSelectionTimeoutMS=5000)
 db = mongo_client[DB_NAME]
 messages_collection = db[COLLECTION_NAME]
 
@@ -32,8 +33,20 @@ messages_collection = db[COLLECTION_NAME]
 # ----------------------------
 async def check_mongo_connection():
     try:
-        # 使用 serverSelectionTimeoutMS 防止卡住
         await mongo_client.admin.command("ping")
         logger.info(f"[✅] MongoDB connection successful. Database '{DB_NAME}' is reachable.")
     except Exception as e:
         logger.error(f"[❌] MongoDB connection failed: {e}")
+
+
+# ----------------------------
+# MongoDB init check at startup
+# ----------------------------
+async def init_db():
+    collections = await db.list_collection_names()
+    if "messages" not in collections:
+        await db.create_collection("messages")
+        logger.info("✅ messages collection created")
+    else:
+        logger.info("ℹ️ messages collection already exists")
+

@@ -1,7 +1,6 @@
-from db.mongo_init import check_mongo_connection
+from db.mongo_init import check_mongo_connection, init_mongodb
 from fastapi import FastAPI, WebSocket
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.staticfiles import StaticFiles
 from chat.websocket import websocket_endpoint, show_message_history
 from pydantic import BaseModel
 
@@ -42,3 +41,4 @@ async def get_history():
 @app.on_event("startup")
 async def startup_event():
     await check_mongo_connection()
+    await init_mongodb()
