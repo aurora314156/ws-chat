@@ -17,7 +17,7 @@ COLLECTION_NAME = os.environ.get("COLLECTION_NAME", "messages")
 
 logger.info(f"MONGO_URI: {MONGO_URI}, DB_NAME: {DB_NAME}, COLLECTION_NAME: {COLLECTION_NAME}")
 
-if not MONGO_URI or not DB_NAME or COLLECTION_NAME:
+if not MONGO_URI or not DB_NAME or not COLLECTION_NAME:
     logger.error("❌ MONGO_ENV parameters is not set! Please check environment variables.")
 
 # ----------------------------
