@@ -19,7 +19,8 @@ It is built with **FastAPI**, **WebSocket**, and **MongoDB**, and allows all par
 ## Dev Related
 
 ### Install and Build Env
-docker compose up --build -d
+docker compose build --no-cache
+docker compose up -d
 
 ### Dev Env Debugging
 docker compose logs -f app
