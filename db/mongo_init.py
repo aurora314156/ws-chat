@@ -6,12 +6,16 @@ from logger import logger
 
 # Prefer reading MongoDB-related environment variables from the cloud environment.
 # If not available, fall back to reading from the local .env file.
-load_dotenv()  # load local .env file.
+if os.getenv("ENV") == "LOCAL":
+    load_dotenv()  # load local .env file.
 
 
-MONGO_URI = os.environ.get("MONGO_URI", "mongodb://admin:admin@mongodb:27017/chat_db?authSource=admin")
+MONGO_URI = os.environ.get("MONGO_URI")
 DB_NAME = os.environ.get("DB_NAME", "chat_db")
 COLLECTION_NAME = os.environ.get("COLLECTION_NAME", "messages")
+
+if not MONGO_URI:
+    raise ValueError("MONGO_URI must be set!")
 
 # ----------------------------
 # MongoDB client
