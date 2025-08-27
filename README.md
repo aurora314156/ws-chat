@@ -33,15 +33,15 @@ docker compose down -v
 ## Todo List 📝
 
 ### Dev Environment
-- [x] Local dev env
+- [X] Local dev env
 
 ### User Features
 - [ ] Member login function
 
 ### Cloud / Deployment
-- [ ] GCP cloud run set up
-- [ ] Mongo Atlas(GCP) set up
-- [ ] Build project on GCP cloud run
+- [X] GCP cloud run set up
+- [X] Mongo Atlas(GCP) set up
+- [X] Build project on GCP cloud run
 
 ### AI Features
 - [ ] AI feature research
