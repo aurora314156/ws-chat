@@ -35,12 +35,6 @@ async def check_mongo_connection():
     try:
         await mongo_client.admin.command("ping")
         logger.info(f"[✅] MongoDB connection successful. Database '{DB_NAME}' is reachable.")
-        # 列出 collection 裡的資料
-        logger.info(f"Database: {DB_NAME}, Collection: {COLLECTION_NAME}")
-        count = 0
-        async for doc in messages_collection.find():
-            count += 1
-            logger.info(f"message {count}: {doc}")
     except Exception as e:
         logger.error(f"[❌] MongoDB connection failed: {e}")
 
