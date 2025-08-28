@@ -16,20 +16,6 @@ It is built with **FastAPI**, **WebSocket**, and **MongoDB**, and allows all par
 
 ---
 
-## Local Dev Related
-
-### Install and Build Env
-docker compose build --no-cache
-docker compose up -d
-
-### Dev Env Debugging
-docker compose logs -f app
-
-### Remove Env
-docker compose down -v
-
----
-
 ## Todo List 📝
 
 ### Dev Environment
@@ -57,3 +43,35 @@ docker compose down -v
 - [ ] Others (linter, CI/CD, etc.)
 
 
+---
+
+## Local Dev env Related
+
+### Install and Build Env
+docker compose build --no-cache
+docker compose up -d
+
+### Dev Env Debugging
+docker compose logs -f app
+
+### Remove Env
+docker compose down -v
+
+
+## Use Firebase to upload static resources
+
+### Install Firebase CLI
+npm install -g firebase-tools
+firebase login
+
+### Init firebase (cd to your project folder)
+firebase init hosting
+
+### Deploy to firebase
+firebase deploy --only hosting
+
+### Local dev testing env (option)
+firebase serve --only hosting
+
+### remove cache
+rm -rf .firebase/
