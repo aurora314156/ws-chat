@@ -5,7 +5,7 @@
 
 ## Description
 
-This is a simple real-time chat application deployed on **GCP**.  
+This is a simple real-time chat application deployed on **GCP + Firebase**.  
 It is built with **FastAPI**, **WebSocket**, and **MongoDB**, and allows all participants in the chat to see messages instantly.  
 
 ### Deployment & Services
@@ -40,7 +40,7 @@ docker compose down -v
 
 ### Cloud / Deployment
 - [X] GCP cloud run set up
-- [ ] Firebase set up
+- [X] Firebase set up
 - [X] Mongo Atlas(GCP) set up
 - [X] Build project on GCP cloud run
 
