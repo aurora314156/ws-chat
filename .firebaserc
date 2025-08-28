@@ -1,6 +1,6 @@
 {
   "projects": {
-    "live-chat": "live-chat-ac80a"
+    "default": "live-chat-ac80a"
   },
   "targets": {},
   "etags": {}
