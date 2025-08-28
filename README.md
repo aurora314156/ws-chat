@@ -40,6 +40,7 @@ docker compose down -v
 
 ### Cloud / Deployment
 - [X] GCP cloud run set up
+- [ ] Firebase set up
 - [X] Mongo Atlas(GCP) set up
 - [X] Build project on GCP cloud run
 
