@@ -15,47 +15,7 @@
     <input type="text" id="message" placeholder="Input message..." />
     <button onclick="sendMessage()">Send</button>
 
-    <script>
-        const chat = document.getElementById("chat");
-
-        // Convert UTC ISO string to local time format: "YYYY/MM/DD HH:MM:SS"
-        function formatLocalTime(utcString) {
-            if (!utcString) return "";
-            const date = new Date(utcString);
-
-            const pad = (n) => n.toString().padStart(2, "0");
-
-            return `${date.getFullYear()}/${pad(date.getMonth()+1)}/${pad(date.getDate())} `
-                 + `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
-        }
-
-        function displayMessage(data) {
-            const div = document.createElement("div");
-            div.textContent = `[${formatLocalTime(data.timestamp)}] ${data.username}: ${data.message}`;
-            chat.appendChild(div);
-            chat.scrollTop = chat.scrollHeight;
-        }
-
-        // -----------------------------
-        // WebSocket realtime message
-        // -----------------------------
-        const wsProtocol = location.protocol === "https:" ? "wss" : "ws";
-        const ws = new WebSocket(`${wsProtocol}://${location.host}/ws`);
-
-        ws.onmessage = function(event) {
-            const data = JSON.parse(event.data);
-            displayMessage(data);
-        };
-
-        async function sendMessage() {
-            const username = document.getElementById("username").value || "Anonymous";
-            const message = document.getElementById("message").value.trim();
-            if(!message) return;
-
-            ws.send(JSON.stringify({ username, message }));
-            document.getElementById("message").value = "";
-        }
-
-    </script>
+    <script type="module" src="config.js"></script>
+    <script type="module" src="main.js"></script>
 </body>
 </html>
