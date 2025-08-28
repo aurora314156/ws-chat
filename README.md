@@ -16,7 +16,7 @@ It is built with **FastAPI**, **WebSocket**, and **MongoDB**, and allows all par
 
 ---
 
-## Dev Related
+## Local Dev Related
 
 ### Install and Build Env
 docker compose build --no-cache
@@ -47,5 +47,12 @@ docker compose down -v
 - [ ] AI feature research
 - [ ] Add some AI feature to project
 
+### Security
+- [ ] XSS prevention (Content Security Policy, escaping)
+- [ ] CSRF protection
+- [ ] Authentication & authorization checks
+
 ### Tools / Maintenance
 - [ ] Others (linter, CI/CD, etc.)
+
+
