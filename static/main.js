@@ -21,7 +21,7 @@ function displayMessage(data) {
 // -----------------------------
 async function initWebSocket() {
     // get backend url from firebase config
-    const res = await fetch("/getConfig");
+    const res = await fetch("/config.json");
     const data = await res.json();
     const BACKEND_URL = data.BACKEND_URL;
 
