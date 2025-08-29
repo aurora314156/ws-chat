@@ -7,13 +7,13 @@ services:
       - "8080:8080"
     volumes:
       - ./:/app
-    command: go run main.go
     environment:
       MONGO_URI: "mongodb://admin:admin@mongodb:27017/chat_db?authSource=admin"
       DB_NAME: "chat_db"
       COLLECTION_NAME: "messages"
     depends_on:
       - mongodb
+    command: ./app
 
   mongodb:
     image: mongo:7

@@ -32,6 +32,8 @@ func main() {
 	logger.Info("========== Live chat server init starting==========")
 	engine := gin.Default()
 
+	engine.Static("/", "./static") // set up static file serving
+
 	engine.GET("/", func(c *gin.Context) {
 		c.Redirect(http.StatusFound, "/chat")
 	})
@@ -55,13 +57,6 @@ func main() {
 			return
 		}
 		handler.WebsocketHandler(conn, wsManager)
-	})
-
-	engine.GET("/status", func(c *gin.Context) {
-		c.JSON(http.StatusOK, StatusResponse{
-			Status:  "ok",
-			Message: "Live Chat Server Running",
-		})
 	})
 
 	// Start HTTP server and wait for interrupt signal for graceful shutdown
