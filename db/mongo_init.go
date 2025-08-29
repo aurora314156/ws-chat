@@ -23,10 +23,6 @@ func InitMongo() error {
 	dBName := os.Getenv("DB_NAME")
 	collectionName := os.Getenv("COLLECTION_NAME")
 
-	mongoURI = "mongodb+srv://ada456651:mrD7JHRYf5lnOSe1@live-chat.dfanpkv.mongodb.net/?retryWrites=true&w=majority&appName=live-chat"
-	dBName = "chat_db"
-	collectionName = "messages"
-
 	logger.Info("MONGO_URI: %s, DB_NAME: %s, COLLECTION_NAME: %s", mongoURI, dBName, collectionName)
 
 	if mongoURI == "" || dBName == "" || collectionName == "" {
