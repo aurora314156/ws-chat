@@ -5,13 +5,12 @@
 
 ## Description
 
-This is a simple real-time chat application deployed on **GCP + Firebase**.  
-It is built with **FastAPI**, **WebSocket**, and **MongoDB**, and allows all participants in the chat to see messages instantly.  
+This is a simple real-time chat application allows all participants in the chat to see messages instantly.  
 
 ### Deployment & Services
-- **Compute**: GCP Cloud Run  
+- **Compute**: GCP Cloud Run, Firebase  
 - **Database**: MongoDB Atlas (hosted on GCP)  
-- **Backend Framework**: FastAPI  
+- **Backend Framework**: Gin  
 - **Real-time Communication**: WebSocket
 
 ---
