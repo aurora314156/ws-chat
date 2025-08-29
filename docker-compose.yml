@@ -5,8 +5,13 @@ services:
     build: .
     ports:
       - "8000:8000"
+    volumes:
+      - ./:/app
+    command: go run main.go
     environment:
       MONGO_URI: "mongodb://admin:admin@mongodb:27017/chat_db?authSource=admin"
+      DB_NAME: "chat_db"
+      COLLECTION_NAME: "messages"
     depends_on:
       - mongodb
 
@@ -22,7 +27,6 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
-      - ./mongo-init/:/docker-entrypoint-initdb.d/
 
 volumes:
   mongo_data:

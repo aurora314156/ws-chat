@@ -1,18 +1,20 @@
-# Cloud Run production Dockerfile
-FROM python:3.12-slim
-
+# Build stage
+FROM golang:1.25-alpine AS builder
 WORKDIR /app
 
-# 安裝依賴
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY go.mod go.sum ./
+RUN go mod download
 
-# 複製程式碼
+
 COPY . .
+RUN go build -o app main.go
 
-# Cloud Run 會提供 PORT 環境變數
+# Run stage
+FROM alpine:latest
+WORKDIR /app
+
+RUN apk add --no-cache ca-certificates
+COPY --from=builder /app/app .
 ENV PORT=8080
 EXPOSE 8080
-
-# 啟動 App
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["./app"]
