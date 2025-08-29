@@ -2,9 +2,10 @@ package db
 
 import (
 	"context"
-	"log"
 	"os"
 	"time"
+
+	"ws-chat/logger"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -22,28 +23,28 @@ func InitMongo() error {
 	dBName := os.Getenv("DB_NAME")
 	collectionName := os.Getenv("COLLECTION_NAME")
 
-	log.Printf("MONGO_URI: %s, DB_NAME: %s, COLLECTION_NAME: %s", mongoURI, dBName, collectionName)
+	logger.Info("MONGO_URI: %s, DB_NAME: %s, COLLECTION_NAME: %s", mongoURI, dBName, collectionName)
 
 	if mongoURI == "" || dBName == "" || collectionName == "" {
-		log.Fatal("[❌] MONGO_ENV parameters is not set! Please check environment variables.")
+		logger.Error("[❌] MONGO_ENV parameters is not set! Please check environment variables.")
 	}
 
 	// connect to MongoDB
 	mongoClient, err := createMongoConnection(mongoURI)
 	if err != nil {
-		log.Fatalf("[❌] MongoDB connect error: %v", err)
+		logger.Error("[❌] MongoDB connect error: %v", err)
 	}
 
-	log.Printf("[✅] Create a Mongo connection to address: %s, DBname: %s, Collection: %s", mongoURI, dBName, collectionName)
+	logger.Info("[✅] Create a Mongo connection to address: %s, DBname: %s, Collection: %s", mongoURI, dBName, collectionName)
 
 	// check connection
 	if err := CheckMongoConnection(mongoClient); err != nil {
-		log.Fatalf("[❌] MongoDB connection failed: %v", err)
+		logger.Error("[❌] MongoDB connection failed: %v", err)
 	}
 
 	// init mongo collection
 	if err := InitMongoCollection(mongoClient, dBName, collectionName); err != nil {
-		log.Fatalf("[❌] MongoDB collection init failed: %v", err)
+		logger.Error("[❌] MongoDB collection init failed: %v", err)
 	}
 	MongoClient = mongoClient
 	return nil
@@ -87,9 +88,9 @@ func InitMongoCollection(mongoClient *mongo.Client, dbName string, collectionNam
 		if err := db.CreateCollection(ctx, collectionName); err != nil {
 			return err
 		}
-		log.Println("[✅] Mongo messages collection created!")
+		logger.Info("[✅] Mongo messages collection created!")
 	} else {
-		log.Println("[ℹ️] Mongo messages collection already exists!")
+		logger.Info("[ℹ️] Mongo messages collection already exists!")
 	}
 	// recheck connection
 	return CheckMongoConnection(mongoClient)

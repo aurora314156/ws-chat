@@ -1,16 +1,15 @@
 package main
 
 import (
+	"context"
 	"io/ioutil"
-	"log"
 	"net/http"
-
-	"os"
-	"os/signal"
-	"syscall"
+	"time"
 
 	"ws-chat/db"
 	"ws-chat/handler"
+	"ws-chat/logger"
+	"ws-chat/wsconn"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -21,15 +20,16 @@ type StatusResponse struct {
 	Message string `json:"message"`
 }
 
+var wsManager = wsconn.New()
+
 func main() {
 	// init MongoDB
-	log.Println("========== Init Mongo DB Go ==========")
+	logger.Info("========== Init Mongo DB Go ==========")
 	if err := db.InitMongo(); err != nil {
-		log.Fatalf("MongoDB init failed: %v", err)
+		logger.Error("MongoDB init failed: %v", err)
 	}
 
-	log.Println("========== Live chat server init starting==========")
-
+	logger.Info("========== Live chat server init starting==========")
 	engine := gin.Default()
 
 	engine.GET("/", func(c *gin.Context) {
@@ -51,10 +51,10 @@ func main() {
 		}
 		conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 		if err != nil {
-			log.Println("WebSocket upgrade error:", err)
+			logger.Error("WebSocket upgrade error:", err)
 			return
 		}
-		go handler.WebsocketHandler(conn)
+		handler.WebsocketHandler(conn, wsManager)
 	})
 
 	engine.GET("/status", func(c *gin.Context) {
@@ -64,17 +64,36 @@ func main() {
 		})
 	})
 
-	// graceful shutdown
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	// Start HTTP server and wait for interrupt signal for graceful shutdown
+	srv := &http.Server{
+		Addr:    ":8080",
+		Handler: engine,
+	}
+
+	// Channel to listen for interrupt or terminate signal
+	quit := make(chan struct{})
 	go func() {
-		<-quit
-		log.Println("Shutting down server...")
-		os.Exit(0)
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			logger.Error("Server run error:", err)
+		}
+		close(quit)
 	}()
 
-	log.Println("live-chat started on :8080")
-	if err := engine.Run(":8080"); err != nil {
-		log.Fatalf("live-chat server error: %v", err)
+	// Wait here until server exits (in production, you should use os/signal to catch SIGINT/SIGTERM)
+	<-quit
+
+	logger.Info("Live chat shutting down ...")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	// close all WebSocket
+	wsManager.CloseAll(ctx)
+
+	// close HTTP server
+	if err := srv.Shutdown(ctx); err != nil {
+		logger.Error("Server shutdown error:", err)
 	}
+
+	logger.Info("Live chat server exited properly")
+
 }
