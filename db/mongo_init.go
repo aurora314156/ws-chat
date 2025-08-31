@@ -17,7 +17,7 @@ var (
 	MongoClient    *mongo.Client
 )
 
-func InitMongo() error {
+func InitMongo() (*mongo.Collection, error) {
 	// load mongo env parameters
 	mongoURI := os.Getenv("MONGO_URI")
 	dBName := os.Getenv("DB_NAME")
@@ -33,6 +33,7 @@ func InitMongo() error {
 	mongoClient, err := createMongoConnection(mongoURI)
 	if err != nil {
 		logger.Error("[❌] MongoDB connect error: %v", err)
+		return nil, err
 	}
 
 	logger.Info("[✅] Create a Mongo connection to address: %s, DBname: %s, Collection: %s", mongoURI, dBName, collectionName)
@@ -40,14 +41,20 @@ func InitMongo() error {
 	// check connection
 	if err := CheckMongoConnection(mongoClient); err != nil {
 		logger.Error("[❌] MongoDB connection failed: %v", err)
+		return nil, err
 	}
 
 	// init mongo collection
 	if err := InitMongoCollection(mongoClient, dBName, collectionName); err != nil {
 		logger.Error("[❌] MongoDB collection init failed: %v", err)
+		return nil, err
 	}
-	MongoClient = mongoClient
-	return nil
+	// get collection
+	msgCol := mongoClient.Database(dBName).Collection(collectionName)
+    if msgCol == nil {
+        return nil, nil // Return nil if the collection is nil
+    }
+	return msgCol, nil
 }
 
 // create a Mongo Connection

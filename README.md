@@ -47,7 +47,7 @@ This is a simple real-time chat application allows all participants in the chat 
 ## Local Dev env Related
 
 ### Install and Build Env
-docker compose build & docker compose up -d
+docker compose build & docker compose up --no-attach mongodb
 
 ### Dev Env Debugging
 docker compose logs -f app

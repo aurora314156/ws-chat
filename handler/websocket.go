@@ -11,7 +11,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-var MsgCol *mongo.Collection
 
 type Message struct {
 	Username  string    `bson:"username" json:"username"`
@@ -19,14 +18,10 @@ type Message struct {
 	Timestamp time.Time `bson:"timestamp" json:"timestamp"`
 }
 
-type WSConnection struct {
-	Conn *websocket.Conn
-}
-
-func sendHistoryMessages(conn *websocket.Conn) error {
+func sendHistoryMessages(conn *websocket.Conn, msgCol *mongo.Collection) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	cur, err := MsgCol.Find(ctx, bson.D{}, nil)
+	cur, err := msgCol.Find(ctx, bson.D{}, nil)
 	if err != nil {
 		return err
 	}
@@ -51,7 +46,7 @@ func WebsocketHandler(conn *websocket.Conn, wsManager interface {
 	Add(*websocket.Conn)
 	Remove(*websocket.Conn)
 	Broadcast(map[string]interface{})
-}) {
+}, msgCol *mongo.Collection) {
 	wsManager.Add(conn)
 	defer func() {
 		wsManager.Remove(conn)
@@ -59,7 +54,7 @@ func WebsocketHandler(conn *websocket.Conn, wsManager interface {
 	}()
 
 	// send history messages
-	if err := sendHistoryMessages(conn); err != nil {
+	if err := sendHistoryMessages(conn, msgCol); err != nil {
 		logger.Error("Send history error:", err)
 	}
 
@@ -69,7 +64,6 @@ func WebsocketHandler(conn *websocket.Conn, wsManager interface {
 		var data map[string]interface{}
 		err := conn.ReadJSON(&data)
 		if err != nil {
-			logger.Error("WebSocket read error:", err)
 			break
 		}
 		ts := time.Now().UTC()
@@ -80,7 +74,7 @@ func WebsocketHandler(conn *websocket.Conn, wsManager interface {
 			Timestamp: ts,
 		}
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		_, err = MsgCol.InsertOne(ctx, msg)
+		_, err = msgCol.InsertOne(ctx, msg)
 		cancel()
 		if err != nil {
 			logger.Error("Mongo insert error:", err)

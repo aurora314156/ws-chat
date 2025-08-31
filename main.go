@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"io/ioutil"
 	"net/http"
 	"time"
 
@@ -13,6 +12,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+
 )
 
 type StatusResponse struct {
@@ -25,8 +25,9 @@ var wsManager = wsconn.New()
 func main() {
 	// init MongoDB
 	logger.Info("========== Init Mongo DB Go ==========")
-	if err := db.InitMongo(); err != nil {
-		logger.Error("MongoDB init failed: %v", err)
+	msgCol, err := db.InitMongo()
+	if err != nil || msgCol == nil {
+		logger.Error("MongoDB init failed or collection is nil: %v", err)
 	}
 
 	logger.Info("========== Live chat server init starting==========")
@@ -35,16 +36,11 @@ func main() {
 	engine.Static("/static", "./static") // set up static file serving
 
 	engine.GET("/", func(c *gin.Context) {
-		c.Redirect(http.StatusFound, "/static/index.html")
+		c.File("./static/index.html")
 	})
 
 	engine.GET("/chat", func(c *gin.Context) {
-		content, err := ioutil.ReadFile("static/index.html")
-		if err != nil {
-			c.String(http.StatusInternalServerError, "Failed to load index.html")
-			return
-		}
-		c.Data(http.StatusOK, "text/html; charset=utf-8", content)
+		c.File("./static/index.html")
 	})
 
 	engine.GET("/ws", func(c *gin.Context) {
@@ -56,7 +52,7 @@ func main() {
 			logger.Error("WebSocket upgrade error:", err)
 			return
 		}
-		handler.WebsocketHandler(conn, wsManager)
+		handler.WebsocketHandler(conn, wsManager, msgCol)
 	})
 
 	// Start HTTP server and wait for interrupt signal for graceful shutdown

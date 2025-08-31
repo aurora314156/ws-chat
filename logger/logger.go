@@ -21,16 +21,16 @@ func init() {
 }
 
 // Info log
-func Info(v ...any) {
-	log.Println("[ℹ️ INFO]", v)
+func Info(format string, v ...any) {
+	log.Printf("[ℹ️ INFO] "+format, v...)
 }
 
 // Error log
-func Error(v ...any) {
-	log.Println("[❌ ERROR]", v)
+func Error(format string, v ...any) {
+	log.Printf("[❌ ERROR]"+format, v)
 }
 
 // Debug log
-func Debug(v ...any) {
-	log.Println("[🐛 DEBUG]", v)
+func Debug(format string, v ...any) {
+	log.Printf("[🐛 DEBUG]"+format, v)
 }

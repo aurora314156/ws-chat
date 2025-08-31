@@ -1,6 +1,7 @@
+// main.js
+
 const chat = document.getElementById("chat");
 
-// Convert UTC ISO string to local time format: "YYYY/MM/DD HH:MM:SS"
 function formatLocalTime(utcString) {
     if (!utcString) return "";
     const date = new Date(utcString);
@@ -16,30 +17,53 @@ function displayMessage(data) {
     chat.scrollTop = chat.scrollHeight;
 }
 
+function sendMessage(ws) {
+    const username = document.getElementById("username").value || "Anonymous";
+    const message = document.getElementById("message").value.trim();
+    if (!message) return;
+
+    // 在發送前檢查 WebSocket 狀態
+    if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ username, message }));
+    } else {
+        console.error("WebSocket is not OPEN. Message not sent.");
+        // 可以選擇通知用戶連線斷開
+    }
+    document.getElementById("message").value = "";
+}
+
 // -----------------------------
-// WebSocket realtime message
+// WebSocket 實時訊息處理
 // -----------------------------
+
+// WebSocket 連線實例
+let ws;
+// 重新連線計時器
+let reconnectTimeout;
+
 async function initWebSocket() {
     // get backend url from firebase config
     const res = await fetch("/static/config.json");
     const data = await res.json();
     const BACKEND_URL = data.BACKEND_URL;
 
-    const ws = new WebSocket(`wss://${BACKEND_URL}/ws`);
-
+    ws = new WebSocket(`wss://${BACKEND_URL}/ws`);
     ws.onmessage = function(event) {
         const data = JSON.parse(event.data);
         displayMessage(data);
     };
+    
+    // event listener for send button
+    const sendButton = document.getElementById("sendButton");
+    sendButton.addEventListener("click", () => sendMessage(ws));  
 
-    window.sendMessage = function() {
-        const username = document.getElementById("username").value || "Anonymous";
-        const message = document.getElementById("message").value.trim();
-        if(!message) return;
-
-        ws.send(JSON.stringify({ username, message }));
-        document.getElementById("message").value = "";
-    };
+    // monitor input box
+    const messageInput = document.getElementById("message");
+    messageInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+            sendMessage(ws);
+        }
+    });
 }
 
-initWebSocket();
+document.addEventListener("DOMContentLoaded", initWebSocket);
