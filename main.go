@@ -33,13 +33,10 @@ func main() {
 	logger.Info("========== Live chat server init starting==========")
 	engine := gin.Default()
 
+	// Serve static files
 	engine.Static("/static", "./static") // set up static file serving
-
+	
 	engine.GET("/", func(c *gin.Context) {
-		c.File("./static/index.html")
-	})
-
-	engine.GET("/chat", func(c *gin.Context) {
 		c.File("./static/index.html")
 	})
 
