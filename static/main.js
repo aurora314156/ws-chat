@@ -40,6 +40,21 @@ async function initWebSocket() {
     const data = await res.json();
     const BACKEND_URL = data.BACKEND_URL;
     const ws = new WebSocket(`wss://${BACKEND_URL}/ws`);
+
+    // Log when the connection is successfully opened
+    ws.onopen = function() {
+        console.log("WebSocket connection established successfully.");
+    };
+
+    // Log any errors that occur during the connection attempt
+    ws.onerror = function(error) {
+        console.error("WebSocket error:", error);
+    };
+
+    // Log when the connection is closed
+    ws.onclose = function() {
+        console.log("WebSocket connection closed.");
+    };
     
     ws.onmessage = function(event) {
         const data = JSON.parse(event.data);

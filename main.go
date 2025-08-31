@@ -40,6 +40,13 @@ func main() {
 		c.File("./static/index.html")
 	})
 
+	engine.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, StatusResponse{
+			Status:  "success",
+			Message: "pong",
+		})
+	})
+
 	engine.GET("/ws", func(c *gin.Context) {
 		upgrader := websocket.Upgrader{
 			CheckOrigin: func(r *http.Request) bool { return true },
