@@ -1,5 +1,3 @@
-// main.js
-
 const chat = document.getElementById("chat");
 
 function formatLocalTime(utcString) {
@@ -35,11 +33,6 @@ function sendMessage(ws) {
 // -----------------------------
 // WebSocket 實時訊息處理
 // -----------------------------
-
-// WebSocket 連線實例
-let ws;
-// 重新連線計時器
-let reconnectTimeout;
 
 async function initWebSocket() {
     // get backend url from firebase config
