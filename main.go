@@ -32,19 +32,9 @@ func main() {
 
 	logger.Info("========== Live chat server init starting==========")
 	engine := gin.Default()
-
-	// Serve static files
-	engine.Static("/static", "./static") // set up static file serving
 	
 	engine.GET("/", func(c *gin.Context) {
 		c.File("./static/index.html")
-	})
-
-	engine.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, StatusResponse{
-			Status:  "success",
-			Message: "pong",
-		})
 	})
 
 	engine.GET("/ws", func(c *gin.Context) {
