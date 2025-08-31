@@ -1,0 +1,10 @@
+# 使用包含完整 Go 工具鏈的映像檔，以支援 go run 指令
+FROM golang:1.25-alpine
+
+WORKDIR /app
+
+# 安裝 SSL/TLS 憑證，以確保應用程式可以進行安全的網路連線
+RUN apk add --no-cache ca-certificates
+
+# 無需複製原始碼或編譯，因為 docker-compose.yml 的 volumes 設定會處理
+# 無需 EXPOSE 或 CMD，這些都由 docker-compose.yml 控制

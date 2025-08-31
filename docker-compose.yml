@@ -2,7 +2,9 @@ version: "3.9"
 
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     ports:
       - "8080:8080"
     volumes:
@@ -13,7 +15,7 @@ services:
       COLLECTION_NAME: "messages"
     depends_on:
       - mongodb
-    command: ./app
+    command: sh -c "go mod tidy && go run main.go"
 
   mongodb:
     image: mongo:7
