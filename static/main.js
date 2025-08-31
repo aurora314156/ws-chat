@@ -39,8 +39,8 @@ async function initWebSocket() {
     const res = await fetch("/static/config.json");
     const data = await res.json();
     const BACKEND_URL = data.BACKEND_URL;
-
-    ws = new WebSocket(`wss://${BACKEND_URL}/ws`);
+    const ws = new WebSocket(`wss://${BACKEND_URL}/ws`);
+    
     ws.onmessage = function(event) {
         const data = JSON.parse(event.data);
         displayMessage(data);
