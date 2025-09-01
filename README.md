@@ -73,6 +73,9 @@ npm install -D tailwindcss@3.4.3 postcss autoprefixer
 ### Init Tailwind setting
 npx tailwindcss init -p
 
+# Init Shadcn/UI
+npx shadcn@latest init
+
 ---
 
 ## Use Firebase to upload static resources
