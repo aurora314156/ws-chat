@@ -9,9 +9,9 @@ This is a simple real-time chat application allows all participants in the chat 
 
 ### Deployment & Services
 - **Compute**: GCP Cloud Run, Firebase  
-- **Database**: MongoDB Atlas (hosted on GCP)  
 - **Frontend**: React (Shadcn/UI and Tailwind CSS)
-- **Backend**: Golang(Gin)  
+- **Backend**: Golang (Gin)  
+- **Database**: MongoDB Atlas  
 - **Real-time Communication**: WebSocket
 
 ---
@@ -47,7 +47,7 @@ This is a simple real-time chat application allows all participants in the chat 
 ---
 
 ## Local Dev env Related
-
+## - Backend
 ### Install and Build Env
 docker compose build & docker compose up --no-attach mongodb
 
@@ -57,6 +57,23 @@ docker compose logs -f app
 ### Remove Env
 docker compose down -v
 
+---
+
+## - FrontEnd (React & (Shadcn/UI and Tailwind CSS))
+
+### create a react project
+npm create vite@latest . -- --template react
+
+### Perform a fresh install of all dependencies
+npm install 
+
+### Install Tailwind CSS and releated packages
+npm install -D tailwindcss@3.4.3 postcss autoprefixer
+
+### Init Tailwind setting
+npx tailwindcss init -p
+
+---
 
 ## Use Firebase to upload static resources
 
