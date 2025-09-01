@@ -3,6 +3,14 @@ FROM golang:1.25-alpine
 
 WORKDIR /app
 
+# 設定 GOPROXY，加速模組下載
+ENV GOPROXY=https://goproxy.io,direct
+
+# 複製 go.mod 和 go.sum 檔案，並讓 Docker 進行快取
+# 只要這兩個檔案沒變，後續的 go mod download 就不會重新執行
+COPY go.mod go.sum ./
+RUN go mod download
+
 # 安裝 SSL/TLS 憑證，以確保應用程式可以進行安全的網路連線
 RUN apk add --no-cache ca-certificates
 

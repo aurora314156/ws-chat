@@ -10,7 +10,8 @@ This is a simple real-time chat application allows all participants in the chat 
 ### Deployment & Services
 - **Compute**: GCP Cloud Run, Firebase  
 - **Database**: MongoDB Atlas (hosted on GCP)  
-- **Backend Framework**: Gin  
+- **Frontend**: React (Shadcn/UI and Tailwind CSS)
+- **Backend**: Golang(Gin)  
 - **Real-time Communication**: WebSocket
 
 ---
@@ -27,7 +28,8 @@ This is a simple real-time chat application allows all participants in the chat 
 - [X] GCP cloud run set up
 - [X] Firebase set up
 - [X] Mongo Atlas(GCP) set up
-- [X] Build project on GCP cloud run
+- [X] Build BE on GCP cloud run
+- [X] Build FE on firebase
 
 ### AI Features
 - [ ] AI feature research
