@@ -27,9 +27,10 @@ This is a simple real-time chat application allows all participants in the chat 
 ### Cloud / Deployment
 - [X] GCP cloud run set up
 - [X] Firebase set up
-- [X] Mongo Atlas(GCP) set up
+- [X] Mongo Atlas
 - [X] Build BE on GCP cloud run
 - [X] Build FE on firebase
+- [X] SupeBase (PostgreSQL)
 
 ### AI Features
 - [ ] AI feature research
