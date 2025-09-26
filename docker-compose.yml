@@ -13,6 +13,8 @@ services:
       MONGO_URI: "mongodb://admin:admin@mongodb:27017/chat_db?authSource=admin"
       DB_NAME: "chat_db"
       COLLECTION_NAME: "messages"
+      SUPABASEURL: "http://localhost:54321"
+      SUPABASEKEY: ""
     depends_on:
       - mongodb
     command: sh -c "go mod tidy && go run main.go"

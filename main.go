@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"log"
 	"net/http"
 	"time"
 
@@ -12,7 +13,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
-
+	"github.com/supabase-community/supabase-go"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type StatusResponse struct {
@@ -20,19 +22,34 @@ type StatusResponse struct {
 	Message string `json:"message"`
 }
 
-var wsManager = wsconn.New()
+var wsManager *wsconn.WSManager
+var msgCol *mongo.Collection
+var supaClient *supabase.Client
 
-func main() {
-	// init MongoDB
-	logger.Info("========== Init Mongo DB Go ==========")
+func init() {
+	// init websocket manager
+	wsManager = wsconn.New()
+
+	// init mongoDB
+	logger.Info("========== Init MongoDB ==========")
 	msgCol, err := db.InitMongo()
 	if err != nil || msgCol == nil {
 		logger.Error("MongoDB init failed or collection is nil: %v", err)
 	}
 
+	// init Supabase
+	logger.Info("========== Init Supabase ==========")
+	supaClient, err := db.NewSupabaseClient()
+	if err != nil {
+		log.Fatalf("Failed to initialize Supabase client: %v", err)
+	}
+
+}
+
+func main() {
 	logger.Info("========== Live chat server init starting==========")
 	engine := gin.Default()
-	
+
 	engine.GET("/", func(c *gin.Context) {
 		c.File("./static/index.html")
 	})

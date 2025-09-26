@@ -12,9 +12,7 @@ import (
 )
 
 var (
-	dBName         string
-	collectionName string
-	MongoClient    *mongo.Client
+	MongoClient *mongo.Client
 )
 
 func InitMongo() (*mongo.Collection, error) {
@@ -51,9 +49,9 @@ func InitMongo() (*mongo.Collection, error) {
 	}
 	// get collection
 	msgCol := mongoClient.Database(dBName).Collection(collectionName)
-    if msgCol == nil {
-        return nil, nil // Return nil if the collection is nil
-    }
+	if msgCol == nil {
+		return nil, nil // Return nil if the collection is nil
+	}
 	return msgCol, nil
 }
 

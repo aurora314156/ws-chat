@@ -1,6 +1,10 @@
 package tool
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 func ToString(val interface{}, fallback string) string {
 	if val == nil {
@@ -18,4 +22,8 @@ func ConvertUTCToISO(ts time.Time) string {
 		return ""
 	}
 	return ts.UTC().Format(time.RFC3339)
+}
+
+func GetUUID() uuid.UUID {
+	return uuid.New()
 }
