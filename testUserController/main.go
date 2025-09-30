@@ -35,7 +35,7 @@ func main() {
 	// get
 
 	// update
-	updates := map[string]interface{}{
+	updates := map[string]any{
 		"full_name": "rick999",
 		"email":     "rick999@gmail.com",
 	}

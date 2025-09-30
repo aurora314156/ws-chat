@@ -60,7 +60,7 @@ func (m *WSManager) CloseAll(ctx context.Context) {
 }
 
 // Broadcast sends a message to all active WebSocket connections
-func (m *WSManager) Broadcast(msg map[string]interface{}) {
+func (m *WSManager) Broadcast(msg map[string]any) {
 	m.mu.Lock()
 	conns := make([]*websocket.Conn, 0, len(m.conns))
 	for c := range m.conns {

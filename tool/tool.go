@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func ToString(val interface{}, fallback string) string {
+func ToString(val any, fallback string) string {
 	if val == nil {
 		return fallback
 	}

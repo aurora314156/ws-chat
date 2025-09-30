@@ -11,7 +11,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-
 type Message struct {
 	Username  string    `bson:"username" json:"username"`
 	Message   string    `bson:"message" json:"message"`
@@ -30,7 +29,7 @@ func sendHistoryMessages(conn *websocket.Conn, msgCol *mongo.Collection) error {
 		return err
 	}
 	for _, msg := range msgs {
-		out := map[string]interface{}{
+		out := map[string]any{
 			"username":  msg.Username,
 			"message":   msg.Message,
 			"timestamp": tool.ConvertUTCToISO(msg.Timestamp),
@@ -45,7 +44,7 @@ func sendHistoryMessages(conn *websocket.Conn, msgCol *mongo.Collection) error {
 func WebsocketHandler(conn *websocket.Conn, wsManager interface {
 	Add(*websocket.Conn)
 	Remove(*websocket.Conn)
-	Broadcast(map[string]interface{})
+	Broadcast(map[string]any)
 }, msgCol *mongo.Collection) {
 	wsManager.Add(conn)
 	defer func() {
@@ -61,7 +60,7 @@ func WebsocketHandler(conn *websocket.Conn, wsManager interface {
 	// send and receive messages
 	for {
 		// read message
-		var data map[string]interface{}
+		var data map[string]any
 		err := conn.ReadJSON(&data)
 		if err != nil {
 			break
@@ -80,7 +79,7 @@ func WebsocketHandler(conn *websocket.Conn, wsManager interface {
 			logger.Error("Mongo insert error:", err)
 		}
 		// broadcast to all ws connections
-		out := map[string]interface{}{
+		out := map[string]any{
 			"username":  msg.Username,
 			"message":   msg.Message,
 			"timestamp": tool.ConvertUTCToISO(ts),

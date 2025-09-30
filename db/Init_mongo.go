@@ -78,7 +78,7 @@ func InitMongoCollection(mongoClient *mongo.Client, dbName string, collectionNam
 	db := mongoClient.Database(dbName)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	collections, err := db.ListCollectionNames(ctx, map[string]interface{}{})
+	collections, err := db.ListCollectionNames(ctx, map[string]any{})
 	if err != nil {
 		return err
 	}

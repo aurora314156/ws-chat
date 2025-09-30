@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"time"
 
+	"ws-chat/controller"
 	"ws-chat/db"
 	"ws-chat/handler"
 	"ws-chat/logger"
@@ -43,7 +44,7 @@ func init() {
 	// init Supabase
 	logger.Info("========== Init Supabase ==========")
 	supaClient, err := db.NewSupabaseClient()
-	if err != nil {
+	if err != nil || supaClient == nil {
 		log.Fatalf("Failed to initialize Supabase client: %v", err)
 	}
 
@@ -51,6 +52,11 @@ func init() {
 
 func main() {
 	logger.Info("========== Live chat server init starting==========")
+	// init controllers
+	userController := controller.NewUserController(supaClient)
+	userHandler := handler.NewUserHandler(userController)
+
+	// init gin engine
 	engine := gin.Default()
 
 	engine.GET("/", func(c *gin.Context) {
@@ -68,6 +74,11 @@ func main() {
 		}
 		handler.WebsocketHandler(conn, wsManager, msgCol)
 	})
+
+	v1 := engine.Group("/api/v1")
+	{
+		v1.POST("/signup", userHandler.Signup)
+	}
 
 	// Start HTTP server and wait for interrupt signal for graceful shutdown
 	srv := &http.Server{
