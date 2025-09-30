@@ -4,6 +4,9 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"ws-chat/db"
@@ -73,7 +76,8 @@ func main() {
 	}
 
 	// Channel to listen for interrupt or terminate signal
-	quit := make(chan struct{})
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			logger.Error("Server run error:", err)
