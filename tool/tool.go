@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func ToString(val any, fallback string) string {
@@ -24,6 +25,11 @@ func ConvertUTCToISO(ts time.Time) string {
 	return ts.UTC().Format(time.RFC3339)
 }
 
-func GetUUID() uuid.UUID {
+func GenUUID() uuid.UUID {
 	return uuid.New()
+}
+
+func HashedPassword(password []byte) (hashedPassword []byte, err error) {
+	hashedPassword, err = bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
+	return hashedPassword, err
 }

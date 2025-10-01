@@ -5,9 +5,9 @@ import (
 	"ws-chat/controller"
 	"ws-chat/logger"
 	"ws-chat/models"
+	"ws-chat/tool"
 
 	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/bcrypt"
 )
 
 // define request payload for signup
@@ -37,7 +37,7 @@ func (h *UserHandler) Signup(c *gin.Context) {
 	}
 
 	// 2. password hashing
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	hashedPassword, err := tool.HashedPassword([]byte(req.Password))
 	if err != nil {
 		logger.Error("Failed to hash password: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error during password hashing"})
@@ -45,16 +45,17 @@ func (h *UserHandler) Signup(c *gin.Context) {
 	}
 
 	// 3. convert payload to User model
-	newUser := models.User{
+	newUser := &models.User{
 		Email:          req.Email,
 		HashedPassword: string(hashedPassword),
 		FullName:       req.FullName,
+		ID:             tool.GenUUID(),
 	}
 
 	// 4. call controller to create user
 	if err := h.UserController.CreateUser(newUser); err != nil {
 		// if it's a duplicate email error
-		if controller.IsDuplicateError(err) {
+		if err == controller.ErrUserAlreadyExists {
 			c.JSON(http.StatusConflict, gin.H{"error": "User with this email already exists."})
 			return
 		}

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -17,6 +18,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"github.com/joho/godotenv"
 	"github.com/supabase-community/supabase-go"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -31,6 +33,12 @@ var msgCol *mongo.Collection
 var supaClient *supabase.Client
 
 func init() {
+	// load .env file
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("Warning: Could not load .env file. Assuming environment variables are already set.")
+	}
+
 	// init websocket manager
 	wsManager = wsconn.New()
 
