@@ -66,7 +66,10 @@ func (h *UserHandler) Signup(c *gin.Context) {
 	}
 
 	// 5. respond success
-	c.JSON(http.StatusCreated, gin.H{"message": "User registered successfully"})
+	c.JSON(http.StatusCreated, gin.H{
+		"message": "User registered successfully",
+		"user_id": newUser.ID,
+	})
 }
 
 func (h *UserHandler) Signin(c *gin.Context) {
