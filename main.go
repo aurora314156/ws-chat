@@ -68,6 +68,10 @@ func main() {
 	engine := gin.Default()
 
 	engine.GET("/", func(c *gin.Context) {
+		c.File("./static/register.html")
+	})
+
+	engine.GET("/chat", func(c *gin.Context) {
 		c.File("./static/index.html")
 	})
 
