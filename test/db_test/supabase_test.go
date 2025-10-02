@@ -1,7 +1,7 @@
 package db_test
 
 import (
-	"testing" // ⚠️ 必須引入 testing 包
+	"testing"
 	"ws-chat/db"
 
 	"github.com/joho/godotenv"

@@ -68,3 +68,15 @@ func (h *UserHandler) Signup(c *gin.Context) {
 	// 5. respond success
 	c.JSON(http.StatusCreated, gin.H{"message": "User registered successfully"})
 }
+
+func (h *UserHandler) Signin(c *gin.Context) {
+
+}
+
+func (h *UserHandler) GetProfile(c *gin.Context) {
+
+}
+
+func (h *UserHandler) UpdateProfile(c *gin.Context) {
+
+}
